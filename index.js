@@ -33,7 +33,8 @@ exports.handleHttpRequest = function (request, context, done) {
         var params = {
           TableName: quotationTableName,
           Key: { 'user_id': { S: userId } },
-          ProjectionExpression: 'email, company, birthdate'
+          //ProjectionExpression: 'companyName, birthDate, makeName, modelName, regisDate, pastClaims, policyholderdriver, usage, email'
+          ProjectionExpression: 'companyName, birthDate, makeName, modelName'
         };
         // Call DynamoDB to read the item from the table
         dynamo.getItem(params, function (err, data) {
@@ -43,9 +44,7 @@ exports.handleHttpRequest = function (request, context, done) {
           } else {
             console.log("Success Data : ", data);
 
-            //Send Email
-            data.userID = userId;
-            emailGeneratorSvc(data);
+            
 
             response.body = JSON.stringify(data);
             done(null, response);
@@ -62,9 +61,15 @@ exports.handleHttpRequest = function (request, context, done) {
           TableName: quotationTableName,
           Item: {
             'user_id': { S: userId },
-            'email': { S: bodyJSON['email'] },
-            'company': { S: bodyJSON['company'] },
-            'birthdate': { S: bodyJSON['birthdate'] }
+            'companyName': { S: bodyJSON['companyName'] },
+            'birthDate': { S: bodyJSON['birthDate'] },
+            'makeName': { S: bodyJSON['makeName'] },
+            'modelName': { S: bodyJSON['modelName'] },
+            'regisDate': { S: bodyJSON['regisDate'] },
+            'pastClaims': { S: bodyJSON['pastClaims'] },
+            'policyholderdriver': { S: bodyJSON['policyholderdriver'] },
+            'usage': { S: bodyJSON['usage'] },
+            'email': { S: bodyJSON['email'] }
           }
         };
         dynamo.putItem(params, function (error, data) {
@@ -73,18 +78,8 @@ exports.handleHttpRequest = function (request, context, done) {
           } else {
             console.log('Post data', data);
 
-            // https://medium.com/think-serverless/image-upload-and-retrieval-from-s3-using-aws-api-gateway-and-lambda-b4c2961e8d1
-            // http://www.isummation.com/blog/using-aws-lambda-to-generate-pdf/
-            
-            //1. Generate PDF
-
-            //2. Upload PDF to S3
-
-            //3. Download attachment from S3
-
-            //4. Send email - Done 
-            // data.email = bodyJSON['email'];
-            // emailGeneratorSvc(response);
+            //Send Email
+            emailGeneratorSvc(params);
 
             done(null, response);
           }

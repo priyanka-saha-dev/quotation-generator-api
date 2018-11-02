@@ -96,15 +96,33 @@ Resources:
                   schema:
                     type: object
                     required:
+                    - companyName
+                    - birthDate
+                    - makeName
+                    - modelName
+                    - regisDate
+                    - pastClaims
+                    - policyholderdriver
+                    - usage
                     - email
-                    - company
-                    - birthdate
                     properties:
+                      companyName:
+                        type: string
+                      birthDate:
+                        type: string
+                      makeName:
+                        type: string
+                      modelName:
+                        type: string
+                      regisDate:
+                        type: string
+                      pastClaims:
+                        type: string
+                      policyholderdriver:
+                        type: string
+                      usage:
+                        type: string
                       email:
-                        type: string
-                      company:
-                        type: string
-                      birthdate:
                         type: string
 
   MyApiGatewayDeployment:

@@ -58,10 +58,18 @@ const getEmailData = (data) => {
       <h3>${CONSTANTS.EMAIL_BODY}</h3>
     
       <ul>
-        <li>UserID : ${JSON.stringify(data.userID)}</li>
-        <li>Email : ${JSON.stringify(data.Item.email.S)}</li>
-        <li>Company : ${JSON.stringify(data.Item.company.S)}</li>
-        <li>Birthdate : ${JSON.stringify(data.Item.birthdate.S)}</li>
+        <li>UserID : ${JSON.stringify(data.Item.userId.S)}</li>
+        <li>Company name : ${JSON.stringify(data.Item.companyName.S)}</li>
+        <li>Birthday : ${JSON.stringify(data.Item.birthDate.S)}</li>
+        <li>Make name : ${JSON.stringify(data.Item.makeName.S)}</li>
+        <li>Model name : ${JSON.stringify(data.Item.modelName.S)}</li>
+
+        <li>Reg date : ${JSON.stringify(data.Item.regisDate.S)}</li>
+        <li>past claims : ${JSON.stringify(data.Item.pastClaims.S)}</li>
+
+        <li>Policy holder and main driver : ${JSON.stringify(data.Item.policyholderdriver.S)}</li>
+        <li>usage : ${JSON.stringify(data.Item.usage.S)}</li>
+        <li>email : ${JSON.stringify(data.Item.email.S)}</li>
       <ul>
 
     </div>
