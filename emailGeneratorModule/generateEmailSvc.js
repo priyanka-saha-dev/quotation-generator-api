@@ -29,10 +29,45 @@ var parseCB = (error, resp) => {
 }
 
 function generateEmailSvc(data) {
-  //console.log('Mailing with attchment - ' + filePath);
-  let mydata = data.email.Item;
-  mailOptions.text = JSON.stringify(mydata);
+  // let emailData = getEmailData(data);
+  // mailOptions.text = JSON.stringify(emailData);
+
+  mailOptions.html = getEmailData(data);
   return transporter.sendMail(mailOptions, parseCB);
+}
+
+const getEmailData = (data) => {
+  // let emailData = {
+  //   birthDate : data.birthdate,
+  //   makename : data.makename,
+  //   modelname : data.modelname,
+  //   regDate : data.regdate,
+  //   email : data.email
+  // }
+
+  // let data = {
+  //   "Item":{
+  //     "email":{
+  //       "S":"mail001@mail.com"
+  //     }
+  //   },
+  //   "userID":"001"
+  // }
+  let htmlContent = `
+    <div>
+      <h3>${CONSTANTS.EMAIL_BODY}</h3>
+    
+      <ul>
+        <li>UserID : ${JSON.stringify(data.userID)}</li>
+        <li>Email : ${JSON.stringify(data.Item.email.S)}</li>
+        <li>Company : ${JSON.stringify(data.Item.company.S)}</li>
+        <li>Birthdate : ${JSON.stringify(data.Item.birthdate.S)}</li>
+      <ul>
+
+    </div>
+  `;
+
+  return htmlContent;
 }
 
 

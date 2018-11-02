@@ -26,12 +26,6 @@ exports.handleHttpRequest = function (request, context, done) {
       statusCode: 200
     };
 
-    //arn:aws:s3:::quotation-data2
-    let s3downloadAttachmentParams = {
-      "Bucket": "quotation-data2",
-      "Key": event.queryStringParameters.key
-    }
-
     switch (request.httpMethod) {
       case 'GET': {
         console.log('GET');
@@ -39,7 +33,7 @@ exports.handleHttpRequest = function (request, context, done) {
         var params = {
           TableName: quotationTableName,
           Key: { 'user_id': { S: userId } },
-          ProjectionExpression: 'email'
+          ProjectionExpression: 'email, company, birthdate'
         };
         // Call DynamoDB to read the item from the table
         dynamo.getItem(params, function (err, data) {
@@ -48,7 +42,12 @@ exports.handleHttpRequest = function (request, context, done) {
             throw `Dynamo Get Error (${err})`
           } else {
             console.log("Success Data : ", data);
-            response.body = JSON.stringify(data.Item.email);
+
+            //Send Email
+            data.userID = userId;
+            emailGeneratorSvc(data);
+
+            response.body = JSON.stringify(data);
             done(null, response);
           }
         });
@@ -63,7 +62,9 @@ exports.handleHttpRequest = function (request, context, done) {
           TableName: quotationTableName,
           Item: {
             'user_id': { S: userId },
-            'email': { S: bodyJSON['email'] }
+            'email': { S: bodyJSON['email'] },
+            'company': { S: bodyJSON['company'] },
+            'birthdate': { S: bodyJSON['birthdate'] }
           }
         };
         dynamo.putItem(params, function (error, data) {
@@ -82,8 +83,8 @@ exports.handleHttpRequest = function (request, context, done) {
             //3. Download attachment from S3
 
             //4. Send email - Done 
-            data.email = bodyJSON['email'];
-            emailGeneratorSvc(response);
+            // data.email = bodyJSON['email'];
+            // emailGeneratorSvc(response);
 
             done(null, response);
           }
